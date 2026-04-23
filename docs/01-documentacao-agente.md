@@ -68,3 +68,26 @@ A arquitetura do agente segue um fluxo simples:
 Essa estrutura permite respostas consistentes e reduz o risco de informações incorretas.
 
 ## 4. Segurança e Antialucinação
+
+O agente foi projetado para operar com segurança e evitar a geração de informações incorretas (alucinações), especialmente por se tratar de um contexto financeiro.
+
+Diretrizes de segurança:
+
+-  O agente responde apenas com base nos dados fornecidos pelo usuário
+-  Não inventa informações ou faz suposições sem base
+-  Declara explicitamente quando não possui dados suficientes
+-  Não acessa dados bancários reais ou informações sensíveis
+-  Não realiza recomendações de investimento
+
+Estratégias de antialucinação:
+
+-  Utilização restrita da base de conhecimento disponível
+-  Validação das informações antes de gerar a resposta
+-  Respostas sempre fundamentadas em dados fornecidos
+-  Comunicação clara sobre limitações do agente
+
+Limitações da solução:
+
+-  Não substitui um consultor financeiro profissional
+-  Não garante precisão absoluta sem dados completos
+-  Atua apenas como suporte educativo e analítico
