@@ -49,7 +49,7 @@ Limitações do agente:
 ```mermaid
 flowchart TD
     A[Usuário] --> B[Interface]
-    B --> C[Modelo de Linguagem (LLM)]
+    B --> C[Modelo de Linguagem - LLM]
     C --> D[Base de Conhecimento]
     D --> E[Validação de Dados]
     E --> F[Resposta do Agente]
