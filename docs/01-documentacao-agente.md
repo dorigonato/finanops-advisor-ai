@@ -46,4 +46,25 @@ Limitações do agente:
 
 ## 3. Arquitetura
 
+````mermaid
+flowchart TD
+    A[Usuário] --> B[Interface]
+    B --> C[Modelo de Linguagem (LLM)]
+    C --> D[Base de Conhecimento]
+    D --> E[Validação de Dados]
+    E --> F[Resposta do Agente]
+    F --> B
+```md
+A arquitetura do agente segue um fluxo simples:
+
+- O usuário interage com a interface da aplicação
+- A solicitação é processada pelo modelo de linguagem (LLM)
+- O modelo consulta a base de conhecimento disponível
+- As informações passam por uma etapa de validação
+- O agente retorna uma resposta clara e baseada em dados
+
+Essa estrutura permite respostas consistentes e reduz o risco de informações incorretas.
+
+
 ## 4. Segurança e Antialucinação
+````
