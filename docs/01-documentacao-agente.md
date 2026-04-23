@@ -1,92 +1,17 @@
-# Documentação do Agente
+# Documentação do Agente Financeiro
 
-> [!TIP]
-> **Prompt usado para esta etapa:**
-> 
-> Crie a documentação de um agente chamado "Edu", um educador financeiro que ensina conceitos de finanças pessoais de forma simples. Ele não recomenda investimentos, apenas educa. Tom informal e didático. Preencha o template abaixo.
->
-> [cole ou anexe o template `01-documentacao-agente.md` pra contexto]
+## 1. Caso de Uso
 
+O FinanOps Advisor AI é um agente financeiro desenvolvido para ajudar usuários a entender e organizar suas finanças pessoais.
 
-## Caso de Uso
+O principal problema que o agente resolve é a falta de clareza sobre como o dinheiro está sendo utilizado no dia a dia, dificultando o controle financeiro e o planejamento.
 
-### Problema
-> Qual problema financeiro seu agente resolve?
+A solução proposta é analisar dados fornecidos pelo usuário (como receitas e despesas) e gerar insights simples e objetivos, auxiliando na tomada de decisão.
 
-Muitas pessoas têm dificuldade em entender conceitos básicos de finanças pessoais, como reserva de emergência, tipos de investimentos e como organizar seus gastos.
+O público-alvo são pessoas que desejam melhorar sua organização financeira, mas não possuem conhecimento técnico em finanças.
 
-### Solução
-> Como o agente resolve esse problema de forma proativa?
+## 2. Persona e Tom de Voz
 
-Um agente educativo que explica conceitos financeiros de forma simples, usando os dados do próprio cliente como exemplo prático, mas sem dar recomendações de investimento.
+## 3. Arquitetura
 
-### Público-Alvo
-> Quem vai usar esse agente?
-
-Pessoas iniciantes em finanças pessoais que querem aprender a organizar suas finanças.
-
----
-
-## Persona e Tom de Voz
-
-### Nome do Agente
-Edu (Educador Financeiro)
-
-### Personalidade
-> Como o agente se comporta? (ex: consultivo, direto, educativo)
-
-- Educativo e paciente
-- Usa exemplos práticos
-- Nunca julga os gastos do cliente
-
-### Tom de Comunicação
-> Formal, informal, técnico, acessível?
-
-Informal, acessível e didático, como um professor particular.
-
-### Exemplos de Linguagem
-- Saudação: "Oi! Sou o Edu, seu educador financeiro. Como posso te ajudar a aprender hoje?"
-- Confirmação: "Deixa eu te explicar isso de um jeito simples, usando uma analogia..."
-- Erro/Limitação: "Não posso recomendar onde investir, mas posso te explicar como cada tipo de investimento funciona!"
-
----
-
-## Arquitetura
-
-### Diagrama
-
-```mermaid
-flowchart TD
-    A[Usuário] --> B["Streamlit (Interface Visual)"]
-    B --> C[LLM]
-    C --> D[Base de Conhecimento]
-    D --> C
-    C --> E[Validação]
-    E --> F[Resposta]
-```
-
-### Componentes
-
-| Componente | Descrição |
-|------------|-----------|
-| Interface | [Streamlit](https://streamlit.io/) |
-| LLM | Ollama (local) |
-| Base de Conhecimento | JSON/CSV mockados na pasta `data` |
-
----
-
-## Segurança e Anti-Alucinação
-
-### Estratégias Adotadas
-
-- [X] Só usa dados fornecidos no contexto
-- [X] Não recomenda investimentos específicos
-- [X] Admite quando não sabe algo
-- [X] Foca apenas em educar, não em aconselhar
-
-### Limitações Declaradas
-> O que o agente NÃO faz?
-
-- NÃO faz recomendação de investimento
-- NÃO acessa dados bancários sensiveis (como senhas etc)
-- NÃO substitui um profissional certificado
+## 4. Segurança e Antialucinação
