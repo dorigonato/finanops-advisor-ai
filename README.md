@@ -1,103 +1,129 @@
-# 🎓 Edu - Educador Financeiro Inteligente
+# 💰 FinanOps Advisor AI
 
-> Agente de IA Generativa que ensina conceitos de finanças pessoais de forma simples e personalizada, usando os próprios dados do cliente como exemplos práticos.
+Assistente financeiro inteligente baseado em dados reais, desenvolvido com IA generativa.
 
-## 💡 O Que é o Edu?
+---
 
-O Edu é um educador financeiro que **ensina**, não recomenda. Ele explica conceitos como reserva de emergência, tipos de investimentos e análise de gastos usando uma abordagem didática e exemplos concretos baseados no perfil do cliente.
+## 📌 Sobre o Projeto
 
-**O que o Edu faz:**
-- ✅ Explica conceitos financeiros de forma simples
-- ✅ Usa dados do cliente como exemplos práticos
-- ✅ Responde dúvidas sobre produtos financeiros
-- ✅ Analisa padrões de gastos de forma educativa
+O **FinanOps Advisor AI** é um agente financeiro que ajuda usuários a entender e organizar suas finanças pessoais a partir de dados reais.
 
-**O que o Edu NÃO faz:**
-- ❌ Não recomenda investimentos específicos
-- ❌ Não acessa dados bancários sensíveis
-- ❌ Não substitui um profissional certificado
+A solução analisa receitas e despesas e transforma essas informações em insights claros, objetivos e confiáveis.
 
-## 🏗️ Arquitetura
+---
 
-```mermaid
-flowchart TD
-    A[Usuário] --> B[Streamlit]
-    B --> C[Ollama - LLM Local]
-    C --> D[Base de Conhecimento]
-    D --> C
-    C --> E[Resposta Educativa]
-```
+## 🎯 Problema
 
-**Stack:**
-- Interface: Streamlit
-- LLM: Ollama (modelo local `gpt-oss`)
-- Dados: JSON/CSV mockados
+Muitas pessoas não têm clareza sobre como utilizam seu dinheiro no dia a dia.
 
-## 📁 Estrutura do Projeto
+Mesmo com acesso a extratos bancários, falta uma visão consolidada dos gastos, dificultando o controle financeiro e a tomada de decisão.
 
-```
-├── data/                          # Base de conhecimento
-│   ├── perfil_investidor.json     # Perfil do cliente
-│   ├── transacoes.csv             # Histórico financeiro
-│   ├── historico_atendimento.csv  # Interações anteriores
-│   └── produtos_financeiros.json  # Produtos para ensino
+---
+
+## 🚀 Solução
+
+O projeto utiliza:
+
+-  Processamento de dados no backend (Python)
+-  Inteligência artificial para interpretação (LLM)
+-  Interface interativa com Streamlit
+
+O agente responde perguntas financeiras com base em dados estruturados, garantindo maior precisão e evitando respostas incorretas.
+
+---
+
+## ⚙️ Tecnologias Utilizadas
+
+-  Python
+-  Streamlit
+-  Pandas
+-  Ollama (LLM local)
+-  Requests
+
+---
+
+## 🧠 Como Funciona
+
+1. Os dados do usuário são carregados da pasta `/data`
+2. O backend processa e organiza as informações
+3. Um contexto estruturado é enviado ao modelo de IA
+4. O agente responde com base exclusivamente nos dados
+
+---
+
+## 📂 Estrutura do Projeto
+
+finanops-advisor-ai/
 │
-├── docs/                          # Documentação completa
-│   ├── 01-documentacao-agente.md  # Caso de uso e persona
-│   ├── 02-base-conhecimento.md    # Estratégia de dados
-│   ├── 03-prompts.md              # System prompt e exemplos
-│   ├── 04-metricas.md             # Avaliação de qualidade
-│   └── 05-pitch.md                # Apresentação do projeto
-│
-└── src/
-    └── app.py                     # Aplicação Streamlit
-```
+├── data/ # Base de dados (perfil, transações, produtos)
+├── docs/ # Documentação das etapas do projeto
+├── src/ # Código da aplicação
+│ └── app.py
+├── README.md
 
-## 🚀 Como Executar
+---
 
-### 1. Instalar Ollama
+## ▶️ Como Executar
+
+### 1. Clone o repositório
 
 ```bash
-# Baixar em: ollama.com
-ollama pull gpt-oss
-ollama serve
+git clone https://github.com/dorigonato/finanops-advisor-ai.git
+cd finanops-advisor-ai
+
 ```
 
-### 2. Instalar Dependências
+### 2. Instale as dependências
 
-```bash
 pip install streamlit pandas requests
-```
 
-### 3. Rodar o Edu
+### 3. Instale e execute o Ollama
 
-```bash
+Baixe em:
+https://ollama.com/
+
+Execute um modelo local:
+
+ollama run llama3
+
+### 4. Execute a aplicação
+
 streamlit run src/app.py
-```
 
-## 🎯 Exemplo de Uso
+### 5. Acesse no navegador
 
-**Pergunta:** "O que é CDI?"  
-**Edu:** "CDI é uma taxa de referência usada pelos bancos. Quando um investimento rende '100% do CDI', significa que ele acompanha essa taxa. Hoje o CDI está próximo da Selic. Quer que eu explique a diferença entre os dois?"
+http://localhost:8501
 
-**Pergunta:** "Onde estou gastando mais?"  
-**Edu:** "Olhando suas transações de outubro, sua maior despesa é moradia (R$ 1.380), seguida de alimentação (R$ 570). Juntas, representam quase 80% dos seus gastos. Isso é bem comum! Quer que eu explique algumas estratégias de organização?"
+💬 Exemplos de Uso
+"Quais são meus maiores gastos?"
+"Quanto gastei com alimentação?"
+"Como posso melhorar minha organização financeira?"
 
-## 📊 Métricas de Avaliação
+🔒 Segurança e Confiabilidade
+Não inventa informações
+Utiliza apenas dados reais
+Evita alucinações da IA
+Processamento híbrido (backend + LLM)
 
-| Métrica | Objetivo |
-|---------|----------|
-| **Assertividade** | O agente responde o que foi perguntado? |
-| **Segurança** | Evita inventar informações (anti-alucinação)? |
-| **Coerência** | A resposta é adequada ao perfil do cliente? |
+📊 Métricas
 
-## 🎬 Diferenciais
+O agente foi avaliado com base em:
 
-- **Personalização:** Usa os dados do próprio cliente nos exemplos
-- **100% Local:** Roda com Ollama, sem enviar dados para APIs externas
-- **Educativo:** Foco em ensinar, não em vender produtos
-- **Seguro:** Estratégias de anti-alucinação documentadas
+Assertividade
+Coerência
+Segurança (não gerar informações incorretas)
 
-## 📝 Documentação Completa
+🚧 Limitações
+Não recomenda investimentos
+Depende dos dados fornecidos
+Modelo local pode ser mais lento
 
-Toda a documentação técnica, estratégias de prompt e casos de teste estão disponíveis na pasta [`docs/`](./docs/).
+💡 Diferenciais
+Execução 100% local (sem custo de API)
+Privacidade dos dados
+Separação entre cálculo e interpretação
+Respostas baseadas em dados reais
+
+📌 Autor
+
+Projeto desenvolvido por Dorival Rigonato Junior
