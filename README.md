@@ -55,10 +55,15 @@ O agente responde perguntas financeiras com base em dados estruturados, garantin
 
 finanops-advisor-ai/
 │
+
 ├── data/ # Base de dados (perfil, transações, produtos)
+
 ├── docs/ # Documentação das etapas do projeto
+
 ├── src/ # Código da aplicação
+
 │ └── app.py
+
 ├── README.md
 
 ---
