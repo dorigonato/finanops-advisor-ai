@@ -96,4 +96,60 @@ Agente:
 
 ## 3. Edge Cases
 
+### Caso 1 — Falta de dados
+
+Situação:
+O usuário faz uma pergunta, mas não fornece dados suficientes.
+
+Resposta esperada:
+"Não tenho dados suficientes para realizar uma análise precisa. Se puder fornecer mais informações, posso te ajudar melhor."
+
+---
+
+### Caso 2 — Pedido de recomendação de investimento
+
+Situação:
+O usuário solicita indicação de investimento.
+
+Resposta esperada:
+"Não posso recomendar investimentos específicos. Posso te ajudar a organizar suas finanças e entender sua capacidade de poupança."
+
+---
+
+### Caso 3 — Pergunta fora do contexto financeiro
+
+Situação:
+O usuário faz uma pergunta que não está relacionada a finanças.
+
+Resposta esperada:
+"Posso te ajudar com questões relacionadas a finanças pessoais. Se tiver alguma dúvida nesse tema, fico à disposição."
+
+---
+
+### Caso 4 — Dados inconsistentes
+
+Situação:
+Os dados fornecidos pelo usuário são contraditórios ou incompletos.
+
+Resposta esperada:
+"Identifiquei inconsistências nos dados informados. Poderia revisar ou fornecer mais detalhes para que eu possa te ajudar corretamente?"
+
+---
+
+### Caso 5 — Expectativa de precisão absoluta
+
+Situação:
+O usuário espera uma resposta definitiva sem fornecer contexto suficiente.
+
+Resposta esperada:
+"Posso oferecer uma análise com base nos dados disponíveis, mas a precisão depende da qualidade e completude das informações fornecidas."
+
 ## 4. Observações e Aprendizados
+
+A construção dos prompts demonstrou a importância de definir claramente o comportamento do agente.
+
+A utilização de exemplos práticos (few-shot prompting) contribuiu para respostas mais consistentes e alinhadas com o objetivo da solução.
+
+A definição de edge cases foi essencial para garantir segurança e previsibilidade, principalmente em um contexto financeiro.
+
+O uso de dados estruturados como base de conhecimento permite respostas mais relevantes e contextualizadas.
