@@ -1,68 +1,249 @@
-import json
-import pandas as pd
-import requests
 import streamlit as st
+import pandas as pd
+import json
+import requests
+import os
 
-# ============ CONFIGURAÇÃO ============
-OLLAMA_URL = "http://localhost:11434/api/generate"
-MODELO = "gpt-oss"
+# =========================
+# CONFIGURAÇÃO DE CAMINHOS
+# =========================
 
-# ============ CARREGAR DADOS ============
-perfil = json.load(open('./data/perfil_investidor.json'))
-transacoes = pd.read_csv('./data/transacoes.csv')
-historico = pd.read_csv('./data/historico_atendimento.csv')
-produtos = json.load(open('./data/produtos_financeiros.json'))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "data")
 
-# ============ MONTAR CONTEXTO ============
-contexto = f"""
-CLIENTE: {perfil['nome']}, {perfil['idade']} anos, perfil {perfil['perfil_investidor']}
-OBJETIVO: {perfil['objetivo_principal']}
-PATRIMÔNIO: R$ {perfil['patrimonio_total']} | RESERVA: R$ {perfil['reserva_emergencia_atual']}
+# =========================
+# CARREGAR DADOS
+# =========================
 
-TRANSAÇÕES RECENTES:
-{transacoes.to_string(index=False)}
+def carregar_dados():
+    try:
+        with open(os.path.join(DATA_PATH, "perfil_investidor.json"), "r", encoding="utf-8") as f:
+            perfil = json.load(f)
 
-ATENDIMENTOS ANTERIORES:
-{historico.to_string(index=False)}
+        historico = pd.read_csv(os.path.join(DATA_PATH, "historico_atendimento.csv"))
+        transacoes = pd.read_csv(os.path.join(DATA_PATH, "transacoes.csv"))
 
-PRODUTOS DISPONÍVEIS:
+        with open(os.path.join(DATA_PATH, "produtos_financeiros.json"), "r", encoding="utf-8") as f:
+            produtos = json.load(f)
+
+        return perfil, historico, transacoes, produtos
+
+    except Exception as e:
+        st.error(f"Erro ao carregar dados: {e}")
+        return None, None, None, None
+
+
+# =========================
+# PROCESSAMENTO DE DADOS
+# =========================
+
+def calcular_resumo(transacoes):
+    try:
+        df = transacoes.copy()
+
+        # Garantir que valor é numérico
+        df["valor"] = (
+            df["valor"]
+            .astype(str)
+            .str.replace(",", ".", regex=False)
+            .astype(float)
+        )
+
+        # 🔥 EXCLUIR RECEITA EXPLICITAMENTE
+        df = df[df["categoria"].str.lower() != "receita"]
+
+        # Trabalhar apenas com despesas
+        df["valor"] = df["valor"].abs()
+
+        resumo = (
+            df.groupby("categoria")["valor"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+
+        total = resumo.sum()
+
+        percentual = (resumo / total) * 100
+
+        df_resumo = pd.DataFrame({
+            "total": resumo,
+            "percentual (%)": percentual.round(2)
+        })
+
+        return df_resumo, total
+
+    except Exception as e:
+        st.error(f"Erro ao processar transações: {e}")
+        return None, None
+
+
+# =========================
+# MONTAR CONTEXTO
+# =========================
+
+def montar_contexto(perfil, historico, transacoes, produtos):
+    resumo_df, total = calcular_resumo(transacoes)
+
+    contexto = f"""
+Perfil do cliente:
+{json.dumps(perfil, indent=2, ensure_ascii=False)}
+
+Resumo de gastos por categoria (dados oficiais):
+{resumo_df.to_string()}
+
+Total de gastos:
+{total}
+
+IMPORTANTE:
+- Apenas despesas foram consideradas
+- Valores já tratados (positivos)
+- Percentuais já calculados
+- NÃO recalcular
+
+Histórico de interações:
+{historico.head(10).to_string(index=False)}
+
+Produtos financeiros:
 {json.dumps(produtos, indent=2, ensure_ascii=False)}
 """
+    return contexto
 
-# ============ SYSTEM PROMPT ============
-SYSTEM_PROMPT = """Você é o Edu, um educador financeiro amigável e didático.
 
-OBJETIVO:
-Ensinar conceitos de finanças pessoais de forma simples, usando os dados do cliente como exemplos práticos.
+# =========================
+# SYSTEM PROMPT
+# =========================
 
-REGRAS:
-- NUNCA recomende investimentos específicos, apenas explique como funcionam;
-- JAMAIS responda a perguntas fora do tema ensino de finanças pessoais. 
-  Quando ocorrer, responda lembrando o seu papel de educador financeiro;
-- Use os dados fornecidos para dar exemplos personalizados;
-- Linguagem simples, como se explicasse para um amigo;
-- Se não souber algo, admita: "Não tenho essa informação, mas posso explicar...";
-- Sempre pergunte se o cliente entendeu;
-- Responda de forma sucinta e direta, com no máximo 3 parágrafos.
+SYSTEM_PROMPT = """
+Você é o Finan, um assistente financeiro analítico, consultivo e confiável.
+
+Seu objetivo é ajudar o usuário a entender seus gastos com base EXCLUSIVA nos dados fornecidos.
+
+========================
+REGRAS OBRIGATÓRIAS
+========================
+
+- Utilize SOMENTE as informações presentes no contexto
+- NÃO invente valores, percentuais ou categorias
+- NÃO faça estimativas ou aproximações
+- NÃO recalcular números já fornecidos
+- NÃO incluir receitas na análise de gastos
+- NÃO criar conclusões que não estejam diretamente suportadas pelos dados
+- Se não houver dados suficientes, informe claramente
+
+========================
+INTERPRETAÇÃO DOS DADOS
+========================
+
+- Os valores e percentuais já foram previamente calculados
+- Considere apenas o resumo de despesas fornecido
+- Identifique os maiores gastos com base nos valores apresentados
+- Não altere, reordene ou recompute os dados
+
+========================
+FORMATO DA RESPOSTA
+========================
+
+- Comece direto com a análise (evitar introduções longas)
+- Liste os principais gastos em ordem decrescente
+- Apresente sempre:
+  - Categoria
+  - Valor total
+  - Percentual (%)
+- Utilize linguagem clara, objetiva e profissional
+- Evite explicações desnecessárias
+
+========================
+LIMITAÇÕES
+========================
+
+- Não fornecer recomendações de investimento
+- Não substituir um consultor financeiro
+- Não responder perguntas fora do contexto financeiro
+- Não responder perguntas sem dados suficientes
+
+========================
+COMPORTAMENTO
+========================
+
+- Seja direto, analítico e confiável
+- Priorize precisão em vez de criatividade
+- Evite frases genéricas ou motivacionais
+- Não personalize excessivamente (evitar informalidade)
+
 """
 
-# ============ CHAMAR OLLAMA ============
-def perguntar(msg):
+# =========================
+# CHAMADA AO MODELO
+# =========================
+
+def perguntar_llm(pergunta, contexto):
+    url = "http://localhost:11434/api/generate"
+
     prompt = f"""
-    {SYSTEM_PROMPT}
+{SYSTEM_PROMPT}
 
-    CONTEXTO DO CLIENTE:
-    {contexto}
+Contexto:
+{contexto}
 
-    Pergunta: {msg}"""
+Pergunta:
+{pergunta}
+"""
 
-    r = requests.post(OLLAMA_URL, json={"model": MODELO, "prompt": prompt, "stream": False})
-    return r.json()['response']
+    payload = {
+        "model": "llama3",
+        "prompt": prompt,
+        "stream": False
+    }
 
-# ============ INTERFACE ============
-st.title("🎓 Edu, o Educador Financeiro")
+    try:
+        response = requests.post(url, json=payload)
 
-if pergunta := st.chat_input("Sua dúvida sobre finanças..."):
-    st.chat_message("user").write(pergunta)
-    with st.spinner("..."):
-        st.chat_message("assistant").write(perguntar(pergunta))
+        if response.status_code == 200:
+            return response.json().get("response", "Erro ao obter resposta.")
+        else:
+            return f"Erro na API: {response.status_code}"
+
+    except requests.exceptions.ConnectionError:
+        return "Erro: Ollama não está rodando. Execute 'ollama run llama3'."
+
+    except Exception as e:
+        return f"Erro inesperado: {e}"
+
+
+# =========================
+# INTERFACE STREAMLIT
+# =========================
+
+st.set_page_config(page_title="FinanOps Advisor AI", layout="centered")
+
+st.title("💰 FinanOps Advisor AI")
+st.caption("Assistente financeiro baseado em dados reais")
+
+perfil, historico, transacoes, produtos = carregar_dados()
+
+if perfil is None:
+    st.stop()
+
+contexto = montar_contexto(perfil, historico, transacoes, produtos)
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+pergunta = st.chat_input("Digite sua pergunta financeira...")
+
+if pergunta:
+    st.session_state.messages.append({"role": "user", "content": pergunta})
+
+    with st.chat_message("user"):
+        st.markdown(pergunta)
+
+    resposta = perguntar_llm(pergunta, contexto)
+
+    with st.chat_message("assistant"):
+        st.markdown(resposta)
+
+    st.session_state.messages.append({"role": "assistant", "content": resposta})
