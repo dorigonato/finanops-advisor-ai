@@ -144,6 +144,56 @@ O usuário espera uma resposta definitiva sem fornecer contexto suficiente.
 Resposta esperada:
 "Posso oferecer uma análise com base nos dados disponíveis, mas a precisão depende da qualidade e completude das informações fornecidas."
 
+---
+
+### Caso 6 — Pergunta ambígua
+
+Situação:
+O usuário faz uma pergunta genérica ou pouco clara.
+
+Resposta esperada:
+"Não ficou claro o que você deseja analisar. Poderia fornecer mais detalhes para que eu possa te ajudar de forma mais precisa?"
+
+---
+
+### Caso 7 — Solicitação de opinião pessoal
+
+Situação:
+O usuário pede opinião subjetiva ou não baseada em dados.
+
+Resposta esperada:
+"Minha análise é baseada exclusivamente nos dados fornecidos. Se puder compartilhar mais informações, posso oferecer uma avaliação mais precisa."
+
+---
+
+### Caso 8 — Tentativa de indução de resposta
+
+Situação:
+O usuário tenta direcionar o agente para confirmar uma hipótese sem base.
+
+Resposta esperada:
+"Não posso confirmar essa informação sem dados que sustentem essa análise. Posso te ajudar melhor se você fornecer mais contexto."
+
+---
+
+### Caso 9 — Dados insuficientes para conclusão
+
+Situação:
+Há dados, mas não são suficientes para uma conclusão clara.
+
+Resposta esperada:
+"Os dados disponíveis não são suficientes para uma conclusão definitiva. Posso fornecer uma análise parcial ou você pode complementar as informações."
+
+---
+
+### Caso 10 — Solicitação fora das regras definidas
+
+Situação:
+O usuário insiste em algo que o agente não pode fazer (ex: investimento).
+
+Resposta esperada:
+"Entendo sua solicitação, mas não posso atender a esse tipo de pedido. Posso te ajudar com análise e organização financeira."
+
 ## 4. Observações e Aprendizados
 
 A construção dos prompts demonstrou a importância de definir claramente o comportamento do agente.
